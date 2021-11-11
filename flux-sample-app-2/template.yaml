@@ -72,7 +72,7 @@ Resources:
       EventPattern:
         detail:
           action-type: [PUSH]
-          image-tag: [main-*]
+          image-tag: [main-latest]
           repository-name: [ !Ref myRepository]
           result: [SUCCESS]
         detail-type: [ECR Image Action]
