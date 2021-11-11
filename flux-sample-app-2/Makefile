@@ -21,7 +21,7 @@ else
 endif
 
 python_build_depen: 
-	pip3 install -t cd_flux/dependency -r cd_flux/requirements.txt
+	pip3 install -t cd_flux/ -r cd_flux/requirements.txt
 
 simpl_deploy:
 	sam build -u \
