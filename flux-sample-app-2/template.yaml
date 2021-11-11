@@ -1,0 +1,111 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Lambda to deploy a flux-sample-app-2 when have a event on ECR repo
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 3
+    Runtime: python3.6
+    MemorySize: 512
+    Tracing: Active
+    Tags:
+      project: flux-sample-app-2
+      author: akaua
+      managedby: cloudformation/sam 
+
+Parameters:
+  githubToken:
+    Type: String
+    Description: Github token to lambda publish on github
+
+Resources:
+  DeployFluxFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: lambda_cd.lambda_handler
+      CodeUri: cd_flux/
+      Environment:
+        Variables:
+          GITHUB_TOKEN: !Ref githubToken
+
+  myRepository: 
+    Type: AWS::ECR::Repository
+    Properties: 
+      RepositoryName: "flux-sample-app-2"
+      LifecyclePolicy:
+        LifecyclePolicyText: |
+          {
+            "rules": [
+            {
+              "rulePriority": 1,
+              "description": "Only keep 8 images",
+              "selection": {
+                "tagStatus": "any",
+                "countType": "imageCountMoreThan",
+                "countNumber": 8
+              },
+              "action": { "type": "expire" }
+            }]
+          }
+      RepositoryPolicyText: 
+        Version: "2012-10-17"
+        Statement: 
+          - 
+            Sid: AllowPushPull
+            Effect: Allow
+            Principal: 
+              AWS: ['*']
+            Action: 
+              - "ecr:GetDownloadUrlForLayer"
+              - "ecr:BatchGetImage"
+              - "ecr:BatchCheckLayerAvailability"
+              - "ecr:PutImage"
+              - "ecr:InitiateLayerUpload"
+              - "ecr:UploadLayerPart"
+              - "ecr:CompleteLayerUpload"
+
+  AmazonCloudWatchEventRule:
+    Type: 'AWS::Events::Rule'
+    Properties:
+      EventPattern:
+        detail:
+          action-type: [PUSH]
+          image-tag: [main]
+          repository-name: [ !Ref myRepository]
+          result: [SUCCESS]
+        detail-type: [ECR Image Action]
+        source: [aws.ecr]
+      Targets: 
+        - 
+          Arn: 
+            Fn::GetAtt: 
+              - "DeployFluxFunction"
+              - "Arn"
+          Id: "TargetFunctionV1"
+
+  PermissionForEventsToInvokeLambda: 
+    Type: AWS::Lambda::Permission
+    Properties: 
+      FunctionName: 
+        Ref: "DeployFluxFunction"
+      Action: "lambda:InvokeFunction"
+      Principal: "events.amazonaws.com"
+      SourceArn: 
+        Fn::GetAtt: 
+          - "AmazonCloudWatchEventRule"
+          - "Arn"
+
+Outputs:
+  deployFluxFunction:
+    Description: "Deploy using flux function ARN"
+    Value: !GetAtt DeployFluxFunction.Arn
+  
+  myRepository:
+    Description: "Deploy using flux function ARN"
+    Value: !GetAtt myRepository.Arn
+
+
+
+

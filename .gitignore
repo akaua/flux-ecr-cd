@@ -1,0 +1,5 @@
+# Terraform files
+**/.aws-sam
+**/packaged.yaml
+**/dependency/*
+
