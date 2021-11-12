@@ -29,6 +29,7 @@ Resources:
       Environment:
         Variables:
           GITHUB_TOKEN: !Ref githubToken
+          ECR_REPOSITORY: !Ref myRepository
 
   myRepository: 
     Type: AWS::ECR::Repository
@@ -73,7 +74,7 @@ Resources:
         detail:
           action-type: [PUSH]
           image-tag: [main-latest]
-          repository-name: [ !Ref myRepository]
+          repository-name: [ !Ref myRepository ]
           result: [SUCCESS]
         detail-type: [ECR Image Action]
         source: [aws.ecr]
