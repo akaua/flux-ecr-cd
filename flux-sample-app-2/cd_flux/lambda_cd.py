@@ -14,7 +14,13 @@ def lambda_handler(event, context):
     print(github_token)
     ecr_repository = os.environ['ECR_REPOSITORY']
     print(ecr_repository)
-
+    
+    print("------")
+    event_dict = json.loads(event)
+    print(event_dict['detail'])
+    print("------")
+    print(event_dict['detail']['image-digest'])
+    
     return event
 
 # def discover_delete_images(region):
@@ -35,3 +41,6 @@ def lambda_handler(event, context):
 #         'string',
 #     ]
 # )
+
+
+
