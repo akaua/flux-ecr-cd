@@ -7,24 +7,31 @@ patch_all()
 
 
 def lambda_handler(event, context):
-    print(event)
+    # print(event)
     runtime_region = os.environ['AWS_REGION']
-    print(runtime_region)
+    # print(runtime_region)
     github_token = os.environ['GITHUB_TOKEN']
-    print(github_token)
+    # print(github_token)
     ecr_repository = os.environ['ECR_REPOSITORY']
-    print(ecr_repository)
+    # print(ecr_repository)
     
-    print("------")
-    # event_dict = json.loads(event)
-    print(event['detail'])
-    print("------")
-    print(event['detail']['image-digest'])
+    # print(event['detail']['image-digest'])
     
+    get_image_tag_with_hash(event['detail']['image-digest'], ecr_repository)
+
     return event
 
-# def discover_delete_images(region):
-
+def get_image_tag_with_hash(image_digest, ecr_repository_name):
+    client_ecr = boto3.client('ecr')
+    response = client_ecr.batch_get_image(
+        repositoryName= ecr_repository_name,
+        imageIds=[
+            {
+                'imageDigest': image_digest
+            },
+        ]
+    )
+    print(response)
 
 
 
