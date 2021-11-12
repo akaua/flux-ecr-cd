@@ -16,10 +16,10 @@ def lambda_handler(event, context):
     print(ecr_repository)
     
     print("------")
-    event_dict = json.loads(event)
-    print(event_dict['detail'])
+    # event_dict = json.loads(event)
+    print(event['detail'])
     print("------")
-    print(event_dict['detail']['image-digest'])
+    print(event['detail']['image-digest'])
     
     return event
 
