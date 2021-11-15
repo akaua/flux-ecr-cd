@@ -33,7 +33,7 @@ def get_image_tag_with_hash(image_digest, ecr_repository_name):
         ]
     )
     for image in response_images:
-        print(image['imageId']['imageTag'])
+        print(image)
         # if image['imageId']['imageTag'] != 'main-latest' and image['imageId']['imageTag'] != 'latest':
             # new_version_image_tag = image['imageId']['imageTag']
     
