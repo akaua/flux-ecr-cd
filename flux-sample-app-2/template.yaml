@@ -19,6 +19,9 @@ Parameters:
   githubToken:
     Type: String
     Description: Github token to lambda publish on github
+  githubUser:
+    Type: String
+    Description: Github User to lambda publish on github
 
 Resources:
   DeployFluxFunction:
@@ -29,6 +32,7 @@ Resources:
       Environment:
         Variables:
           GITHUB_TOKEN: !Ref githubToken
+          GITHUB_USER: !Ref githubUser
           ECR_REPOSITORY: !Ref myRepository
 
   myRepository: 

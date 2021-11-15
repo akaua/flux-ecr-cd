@@ -1,6 +1,7 @@
 import json
 import os
 import boto3
+from git import Repo
 from aws_xray_sdk.core import xray_recorder
 from aws_xray_sdk.core import patch_all  # Patch all supported libraries for X-Ray - More info: https://docs.aws.amazon.com/xray/latest/devguide/xray-sdk-python-patching.html
 patch_all()
@@ -12,10 +13,10 @@ def lambda_handler(event, context):
     # print(runtime_region)
     github_token = os.environ['GITHUB_TOKEN']
     # print(github_token)
+    github_user = os.environ['GITHUB_USER']
+    print(github_user)
     ecr_repository = os.environ['ECR_REPOSITORY']
     # print(ecr_repository)
-    
-    # print(event['detail']['image-digest'])
     
     new_version_image_tag = get_image_tag_with_hash(event['detail']['image-digest'], ecr_repository)
     print(new_version_image_tag)
@@ -33,13 +34,17 @@ def get_image_tag_with_hash(image_digest, ecr_repository_name):
         ]
     )
     for image in response_images['images']:
-        # print(image['imageId']['imageTag'])
         if image['imageId']['imageTag'] != 'main-latest' and image['imageId']['imageTag'] != 'latest':
             new_version_image_tag = image['imageId']['imageTag']
     
     return new_version_image_tag
 
 
+
+# HTTPS_REMOTE_URL = 'https://<access_token>:x-oauth-basic@github.com/username/private-project'
+# HTTPS_REMOTE_URL = 'https://github.com/username/private-project'
+# DEST_NAME = 'https-cloned-private-project'
+# cloned_repo = Repo.clone_from(HTTPS_REMOTE_URL, DEST_NAME)
 
 # response = client.batch_get_image(
 #     registryId='string',

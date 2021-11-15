@@ -34,4 +34,4 @@ jobs:
           aws-region: eu-west-1
 
       # sam build Flux-sample-app-2
-      - run: make -C flux-sample-app-2/ pack_deploy BUCKET_NAME=${{ secrets.BUCKET_NAME }} STACK_NAME=ecr-flux-sample-app-2 GITHUB_TOKEN=${{ secrets.TOKEN_GITHUB }}
+      - run: make -C flux-sample-app-2/ pack_deploy BUCKET_NAME=${{ secrets.BUCKET_NAME }} STACK_NAME=ecr-flux-sample-app-2 GITHUB_TOKEN=${{ secrets.TOKEN_GITHUB }} GITHUB_USER=${{ secrets.USER_GITHUB }}
