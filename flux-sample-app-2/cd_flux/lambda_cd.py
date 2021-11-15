@@ -17,13 +17,14 @@ def lambda_handler(event, context):
     
     # print(event['detail']['image-digest'])
     
-    get_image_tag_with_hash(event['detail']['image-digest'], ecr_repository)
+    new_version_image_tag = get_image_tag_with_hash(event['detail']['image-digest'], ecr_repository)
+    print(new_version_image_tag)
 
     return event
 
 def get_image_tag_with_hash(image_digest, ecr_repository_name):
     client_ecr = boto3.client('ecr')
-    response = client_ecr.batch_get_image(
+    response_images = client_ecr.batch_get_image(
         repositoryName= ecr_repository_name,
         imageIds=[
             {
@@ -31,7 +32,12 @@ def get_image_tag_with_hash(image_digest, ecr_repository_name):
             },
         ]
     )
-    print(response)
+    for image in response_images:
+        print(image['imageId']['imageTag'])
+        if image['imageId']['imageTag'] != 'main-latest' and image['imageId']['imageTag'] != 'latest':
+            new_version_image_tag = image['imageId']['imageTag']
+    
+    return new_version_image_tag
 
 
 
