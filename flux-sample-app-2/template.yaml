@@ -28,12 +28,26 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: lambda_cd.lambda_handler
+        Layers:
+          - 'arn:aws:lambda:eu-west-1:553035198032:layer:git:14'
       CodeUri: cd_flux/
       Environment:
         Variables:
           GITHUB_TOKEN: !Ref githubToken
           GITHUB_USER: !Ref githubUser
           ECR_REPOSITORY: !Ref myRepository
+
+  # GitLayerFunction:
+  #   Type: AWS::Serverless::LayerVersion
+  #   Properties:
+  #     LayerName: git-layer-dependencies
+  #     Description: Dependencies for sam app [temp-units-conv]
+  #     ContentUri: dependencies/
+  #     CompatibleRuntimes:
+  #       - nodejs6.10
+  #       - nodejs8.10
+  #     LicenseInfo: 'MIT'
+  #     RetentionPolicy: Retain
 
   myRepository: 
     Type: AWS::ECR::Repository
