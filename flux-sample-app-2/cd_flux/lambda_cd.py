@@ -22,6 +22,12 @@ def lambda_handler(event, context):
     new_version_image_tag = get_image_tag_with_hash(event['detail']['image-digest'], ecr_repository)
     print(new_version_image_tag)
 
+    HTTPS_REMOTE_URL = "https://" + github_token + ":x-oauth-basic@github.com/" + github_user + "/flux-gitops-k8s"
+    DEST_NAME = 'https-cloned-private-project'
+    cloned_repo = Repo.clone_from(HTTPS_REMOTE_URL, DEST_NAME)
+
+    print(cloned_repo)
+
     return event
 
 def get_image_tag_with_hash(image_digest, ecr_repository_name):
