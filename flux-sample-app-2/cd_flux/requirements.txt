@@ -2,3 +2,4 @@ boto3==1.9.252
 botocore==1.12.252
 aws-xray-sdk==2.4.2
 gitpython
+typing-extensions==3.7.4.3
