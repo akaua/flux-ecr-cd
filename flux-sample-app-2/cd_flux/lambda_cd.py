@@ -25,8 +25,10 @@ def lambda_handler(event, context):
     HTTPS_REMOTE_URL = "https://" + github_token + ":x-oauth-basic@github.com/" + github_user + "/flux-gitops-k8s"
     DEST_NAME = '/tmp/repo'
     cloned_repo = Repo.clone_from(HTTPS_REMOTE_URL, DEST_NAME)
+    
+    print(os.listdir('/tmp/repo'))
 
-    print(cloned_repo)
+    # print(cloned_repo)
 
     return event
 
