@@ -28,8 +28,8 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: lambda_cd.lambda_handler
-        Layers:
-          - 'arn:aws:lambda:eu-west-1:553035198032:layer:git:14'
+      Layers:
+        - 'arn:aws:lambda:eu-west-1:553035198032:layer:git:14'
       CodeUri: cd_flux/
       Environment:
         Variables:
